@@ -1,1 +1,3 @@
-# python_knowledge_library
+# Python knowledge library
+
+Library containing many key python concepts with explanations
