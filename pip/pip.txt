@@ -1,0 +1,48 @@
+PIP is the standard package manager for Python. It allows you to install and 
+manage additional packages that are not part of the Python standard library. 
+
+Python has a very active community that contributes an even bigger set of 
+packages that can help you with your development needs. These packages are 
+published to the Python Package Index, also known as PyPI (pronounced Pie Pea 
+Eye). PyPI hosts an extensive collection of packages that include development 
+frameworks, tools, and libraries
+
+SHELL:
+pip3 --version
+pip3 list
+pip3 help
+pip3 install requests
+pip show requests
+python -m pip install --upgrade pip
+
+Using Requirement Files
+
+The pip install command always installs the latest published version of a 
+package, but sometimes, you may want to install a specific version that you know
+works with your code.
+
+You want to create a specification of the dependencies and versions you used to
+develop and test your application, so there are no surprises when you use the
+application in production.
+
+Requirement files allow you to specify exactly which packages and versions
+should be installed. Running pip help shows that there is a freeze command
+that outputs the installed packages in requirements format. You can use this
+command, redirecting the output to a file to generate a requirements file:
+
+$ pip freeze > requirements.txt
+$ cat requirements.txt
+
+certifi==2018.11.29
+chardet==3.0.4
+idna==2.8
+requests==2.21.0
+urllib3==1.24.1
+
+When you want to replicate the environment in another system, you can run pip 
+install specifying the requirements file using the -r switch:
+
+$ pip install -r requirements.txt
+
+You can submit the requirements.txt file into source control and use it to 
+create the exact environment in other machines.

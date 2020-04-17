@@ -1,0 +1,241 @@
+# https://realpython.com/inheritance-composition-python/
+
+INHERITANCE
+
+- models what is called an IS A relationship 
+	(eg. Horse IS AN Animal) 
+
+- is represented by an arrow from the derived class pointing to the base class
+
+	Base
+	 /_\
+	  |
+	extends
+	  |
+	Derived
+
+- Derived Class inherits the interface and implementation of Base Class
+
+- Derived classes can specialize the interface by providing a particular
+implementation where applies.
+
+- objects of Derived Class can replace objects of Base Class
+
+- Liskov substitution principle - in a computer program, if S is a subtype of T,
+then objects of type T may be replaced with objects of type S without altering
+any of the desired properties of the program
+
+- Method overriding is the only way to customize the behavior of a base class. 
+
+COMPOSITION
+
+- models a HAS A relationship, a Class Composite can contain an object of
+another Class Component
+
+- enables creating complex types by combining objects of other types
+
+- enables you to reuse code by adding objects to other objects
+
+- Composition is represented through a line with a diamond at the composite
+class pointing to the component class.
+
+	Composite
+	 /\
+	 \/
+	  |
+	  |
+	 \/
+	Derived
+
+Note: Classes that contain objects of other classes are usually referred to as
+composites, where classes that are used to create more complex types are
+referred to as components.
+
+- Composition allows composite classes to reuse the implementation of the 
+components it contains. The composite class doesn’t inherit the component class
+interface, but it can leverage its implementation.
+
+- The composition relation between two classes is considered loosely coupled.
+That means that changes to the component class rarely affect the composite
+class, and changes to the composite class never affect the component class.
+
+- This provides better adaptability to change and allows applications to
+introduce new requirements without affecting existing code.
+
+- When looking at two competing software designs, one based on inheritance and
+another based on composition, the composition solution usually is the most
+flexible. 
+
+- can be used to change behavior at run-time.
+
+AN OVERVIEW OF INHERITANCE IN PYTHON:
+
+- every class you create in Python implicitly derives from object, except
+exceptions!
+	class MyClass(object): 	# object can be ommitted,in Python2
+					# must be included
+
+- BaseException is a base class provided for all error types. To create a new
+error type, you must derive your class from BaseException or one of its derived
+classes. The convention in Python is to derive your custom error types from 
+Exception, which in turn derives from BaseException.
+	class MyError(Exception):
+		pass
+
+ABSTRACT BASE CLASS:
+
+- Abstract base classes exist to be inherited, but never instantiated.
+
+- Python provides the abc module to define abstract base classes.
+
+	EXAMPLE
+
+from abc import ABC, abstractmethod
+
+class Employee(ABC):
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
+    @abstractmethod
+    def calculate_payroll(self):
+        pass
+
+- inheriting from abc.ABC tells others that object of the class inheriting it
+can't be instanciated
+
+- @abstractmethod decorator insist that Derived Class must override it, 
+otherwise it is also an abstract class
+
+IMPLEMENTATION INHERITANCE vs INTERFACE INHERITANCE:
+
+a) The base class interface: The derived class inherits all the methods,
+properties, and attributes of the base class.
+
+b) The base class implementation: The derived class inherits the code that
+implements the class interface.
+
+- Most of the time, you’ll want to inherit the implementation of a class, but
+you will want to implement multiple interfaces, so your objects can be used in
+different situations
+
+- In Python, you don’t have to explicitly declare an interface. Any object that
+implements the desired interface can be used in place of another object (duck 
+typing)
+
+c) Use inheritance to reuse an implementation: Your derived classes should
+leverage most of their base class implementation. They must also model an is a
+relationship. 
+
+d) Implement an interface to be reused: When you want your class to be reused by
+a specific part of your application, you implement the required interface in
+your class, but you don’t need to provide a base class, or inherit from another
+class.
+
+THE CLASS EXPLOSION PROBLEM
+
+- If you are not careful, inheritance can lead you to a huge hierarchical
+structure of classes that is hard to understand and maintain. This is known as
+the class explosion problem.
+
+INHERITING MULTIPLE CLASSES
+
+- Multiple inheritance is the ability to derive a class from multiple base
+classes at the same time
+
+- Multiple inheritance has a bad reputation to the extent that most modern
+programming languages don’t support it. Instead, modern programming languages
+support the concept of interfaces. In those languages, you inherit from a single
+base class and then implement multiple interfaces, so your class can be re-used
+in different situations.
+
+- This constraint is good for software design because it forces you to design
+your classes with fewer dependencies on each other.
+
+- Multiple inheritance can be confusing, especially when you run into the
+diamond problem.
+
+- The diamond problem appears when you’re using multiple inheritance and
+deriving from two classes that have a common base class. This can cause the
+wrong version of a method to be called. 
+
+- When you run into the diamond problem, it’s better to re-think the design. 
+
+FLEXIBLE DESIGNS WITH COMPOSITION
+
+- Composition is more flexible than inheritance because it models a loosely
+coupled relationship.
+
+- Changes to a component class have minimal or no effects on the composite
+class. 
+
+- Designs based on composition are more suitable to change.
+
+- You change behavior by providing new components that implement those behaviors
+instead of adding new classes to your hierarchy.
+
+- Relying too heavily on inheritance can lead to class explosion.
+
+- The biggest problem is not so much the number of classes in your design, but
+how tightly coupled the relationships between those classes are. Tightly coupled
+classes affect each other when changes are introduced.
+
+- The general advice is to use the relationship that creates fewer dependencies
+between two classes. This relation is composition. Still, there will be times
+where inheritance will make more sense.
+
+INHERIATANCE TO MODEL "IS A" RELATIONSHIP
+
+- Inheritance should ONLY be used to model an is a relationship!!!
+
+- Liskov’s substitution principle is the most important guideline to determine
+if inheritance is the appropriate design solution. 
+
+- If you can justify both relationships (A is B, and B is A), then you should
+never inherit those classes from one another. 
+
+MIXING FEATURES WITH MIXIN CLASSES
+
+MIXIN:
+
+- is a class that provides methods to other classes but are not considered 
+a base class.
+
+- allows other classes to reuse its interface and implementation without
+becoming a super class.
+
+- implement a unique behavior that can be aggregated to other unrelated classes.
+
+- similar to composition but they create a stronger relationship.
+
+SUMMARY:
+
+- Use inheritance over composition in Python to model a clear is a relationship.
+First, justify the relationship between the derived class and its base. Then,
+reverse the relationship and try to justify it. If you can justify the 
+relationship in both directions, then you should not use inheritance between
+them.
+
+- Use inheritance over composition in Python to leverage both the interface
+and implementation of the base class.
+
+- Use inheritance over composition in Python to provide mixin features to
+several unrelated classes when there is only one implementation of that feature.
+
+- Use composition over inheritance in Python to model a has a relationship that
+leverages the implementation of the component class.
+
+- Use composition over inheritance in Python to create components that can be
+reused by multiple classes in your Python applications.
+
+- Use composition over inheritance in Python to implement groups of behaviors
+and policies that can be applied interchangeably to other classes to customize
+their behavior.
+
+- Use composition over inheritance in Python to enable run-time behavior changes
+without affecting existing classes.
+
+
+
+
+

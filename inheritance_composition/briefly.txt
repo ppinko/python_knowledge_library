@@ -1,0 +1,37 @@
+What is an inheritance?
+
+Inheritance models what is called an is a relationship. This means that when you
+have a Derived class that inherits from a Base class, you created a relationship
+where Derived is a specialized version of Base.
+
+Let’s say you have a base class Animal and you derive from it to create a Horse 
+class. The inheritance relationship states that a Horse is an Animal. This means
+that Horse inherits the interface and implementation of Animal, and Horse
+objects can be used to replace Animal objects in the application.
+
+
+What’s Composition?
+
+Composition is a concept that models a has a relationship. It enables creating
+complex types by combining objects of other types. This means that a class
+Composite can contain an object of another class Component. This relationship
+means that a Composite has a Component.
+
+When what to use:
+The general advice is to use the relationship that creates fewer dependencies
+between two classes. This relation is composition. Still, there will be times
+where inheritance will make more sense.
+
+
+Search Results
+Featured snippet from the web
+Composition is more flexible than inheritance. You can change implementation of
+class at run-time by changing included object, thus changing behavior of it, but
+you can't do this with inheritance, you can't change behavior of base class at
+run-time. Inheritance breaks encapsulation.
+If sub class is depending on super class behavior for its operation, it suddenly
+becomes fragile. When behavior of super class changes, functionality in sub 
+class may get broken, without any change on its part.
+
+
+

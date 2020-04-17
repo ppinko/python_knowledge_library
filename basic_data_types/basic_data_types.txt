@@ -1,0 +1,25 @@
+Basic data types:
+- Numeric:
+	- Integer
+	- Float
+	- Complex: 3+5j
+- Boolean
+- Sequence Type:
+	- String - are arrays of bytes representing Unicode characters
+	- List - A List represents the most versatile type of data structure in Python. 
+	- Tuple - are immutable, but can hold mutable objects
+- Unordered collection:
+	- Dictionary - maps or associative collections
+	- Set: {1, 'helo', True} - A set is an unordered collection with no duplicate values.
+	- Frozenset: frozenset(iterable) - Frozen set is just an immutable version of a Python set object. 
+
+General Python Data Structure Usage
+
+-Use lists if you have a collection of data that does not need random access. For random access, you need to have knowledge of the element's numeric index. Try to choose lists 	when you need a simple, iterable collection that is modified frequently. Lists are very useful in comprehension expressions for constructing sets or dictionaries.
+- Use a set if you need unicity for the elements and you don't need a nested dictionary or list. Also remember that a set cannot hold any unhashable data types.
+- Use tuples when your data cannot change. Many times, a tuple is used in combination with a dictionary, for example, a tuple might represent a key, because it's immutable.
+- Use frozensets if you need both unique data and immutability.
+
+
+Advanced data types:
+

@@ -1,0 +1,6 @@
+Wzorzec fabryczny to wzorzec kreacyjny, który definiuje interfejs do tworzenia obiektu i odracza
+tworzenie instancji do czasu wykonania.
+
+Używane, gdy nie wiadomo, ile lub jakiego rodzaju obiektów będzie potrzebnych do czasu uruchomienia lub w jego trakcie.
+
+https://infotraining.bitbucket.io/cpp-dp/factory-method.html

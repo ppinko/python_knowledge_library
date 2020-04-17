@@ -1,0 +1,173 @@
+https://stackify.com/python-garbage-collection/
+
+Problems with allocating and deallocating memory independently by developers:
+
+1. Forgetting to free your memory. If you don’t free your memory when you’re 
+done using it, it can result in memory leaks. This can lead to your program 
+using too much memory over time. For long-running applications, this can cause 
+serious problems.
+2. Freeing your memory too soon. The second type of problem consists of freeing
+your memory while it’s still in use. This can cause your program to crash if it
+tries to access a value in memory that doesn’t exist, or it can corrupt your 
+data. A variable that refers to memory that has been freed is called a dangling
+pointer.
+
+Automatic memory management and garbage collection
+
+There are a few different methods for automatic memory management, but one of 
+the more popular ones uses reference counting. With reference counting, the 
+runtime keeps track of all of the references to an object. When an object has 
+zero references to it, it’s unusable by the program code and thus able to be 
+deleted.
+
+For programmers, automatic memory management adds a number of benefits. It’s 
+faster to develop programs without thinking about low-level memory details. 
+Further, it can help avoid costly memory leaks or dangerous dangling pointers.
+
+However, automatic memory management comes at a cost. Your program will need to
+use additional memory and computation to track all of its references. What’s
+more, many programming languages with automatic memory management use
+a “stop-the-world” process for garbage collection where all execution stops
+while the garbage collector looks for and deletes objects to be collected.
+
+How Python implements garbage collection
+
+In this section, we’ll cover how garbage collection works in Python.
+
+There are two aspects to memory management and garbage collection in CPython:
+a.    Reference counting
+b.    Generational garbage collection
+
+1. Reference counting in CPython
+
+The main garbage collection mechanism in CPython is through reference counts. 
+Whenever you create an object in Python, the underlying C object has both a 
+Python type (such as list, dict, or function) and a reference count.
+
+At a very basic level, a Python object’s reference count is incremented whenever
+the object is referenced, and it’s decremented when an object is dereferenced.
+If an object’s reference count is 0, the memory for the object is deallocated.
+
+Your program’s code can’t disable Python’s reference counting.
+
+Viewing reference counts in Python
+
+You can use the sys module from the Python standard library to check reference 
+counts for a particular object. There are a few ways to increase the reference 
+count for an object, such as 
+
+a)    Assigning an object to a variable.
+b)    Adding an object to a data structure, such as appending to a list or 
+adding as a property on a class instance.
+c)    Passing the object as an argument to a function.
+
+>>> import sys
+>>> a = 'my-string'
+>>> sys.getrefcount(a)
+2
+
+Notice that there are two references to our variable a. One is from creating
+the variable. The second is when we pass the variable a to
+the sys.getrefcount() function.
+
+Generational garbage collection
+
+In addition to the reference counting strategy for memory management, Python
+also uses a method called a generational garbage collector.
+
+Example - what happens if you add an object to itself?
+
+>>> class MyClass(object):
+...     pass
+...
+>>> a = MyClass()
+>>> a.obj = a
+>>> del a
+
+In the example above, we defined a new class. We then created an instance of 
+the class and assigned the instance to be a property on itself. Finally, we 
+deleted the instance.
+
+By deleting the instance, it’s no longer accessible in our Python program.
+However, Python didn’t destroy the instance from memory. The instance doesn’t
+have a reference count of zero because it has a reference to itself.
+
+We call this type of problem a reference cycle, and you can’t solve it by
+reference counting. This is the point of the generational garbage collector,
+which is accessible by the gc module in the standard library.
+
+Generational garbage collector terminology
+
+There are two key concepts to understand with the generational garbage 
+collector. The first concept is that of a generation.
+
+The garbage collector is keeping track of all objects in memory. A new object 
+starts its life in the first generation of the garbage collector. If Python 
+executes a garbage collection process on a generation and an object survives, 
+it moves up into a second, older generation. The Python garbage collector has 
+three generations in total, and an object moves into an older generation 
+whenever it survives a garbage collection process on its current generation.
+
+The second key concept is the threshold. For each generation, the garbage 
+collector module has a threshold number of objects. If the number of objects 
+exceeds that threshold, the garbage collector will trigger a collection process.
+For any objects that survive that process, they’re moved into an older
+generation.
+
+Unlike the reference counting mechanism, you may change the behavior of the
+generational garbage collector in your Python program. This includes changing
+the thresholds for triggering a garbage collection process in your code,
+manually triggering a garbage collection process, or disabling the garbage
+collection process altogether.
+
+Using the GC module
+
+Import the gc module into your session. You can then check the configured 
+thresholds of your garbage collector with the get_threshold() method:
+
+>>> import gc
+>>> gc.get_threshold()
+(700, 10, 10)
+
+
+By default, Python has a threshold of 700 for the youngest generation and 
+10 for each of the two older generations.
+
+You can check the number of objects in each of your generations with 
+the get_count() method:
+
+>>> import gc
+>>> gc.get_count()
+(596, 2, 1)
+
+In this example, we have 596 objects in our youngest generation, two objects 
+in the next generation, and one object in the oldest generation.
+
+As you can see, Python creates a number of objects by default before you even 
+start executing your program. You can trigger a manual garbage collection 
+process by using the gc.collect() method:
+
+>>> gc.get_count()
+(595, 2, 1)
+>>> gc.collect()
+57
+>>> gc.get_count()
+(18, 0, 0)
+
+Running a garbage collection process cleans up a huge amount of objects—577 
+in the first generation and three more in the older generations.
+
+You can alter the thresholds for triggering garbage collection by using the 
+set_threshold() method in the gc module:
+
+>>> import gc
+>>> gc.get_threshold()
+(700, 10, 10)
+>>> gc.set_threshold(1000, 15, 15)
+>>> gc.get_threshold()
+(1000, 15, 15)
+
+In the example above, we increase each of our thresholds from their defaults. 
+Increasing the threshold will reduce the frequency at which the garbage
+collector runs. This will be less computationally expensive in your program at
+the expense of keeping dead objects around longer.

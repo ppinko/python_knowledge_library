@@ -1,0 +1,39 @@
+A cyclic import is an import which imports another module and that module 
+imports (possibly indirectly) the module which contains the import statement. 
+If all imports in a cyclic import occur at module level, then a module will be 
+imported when it is part way through its initialization. This may rest in 
+surprising errors, as parts of the module being imported may not yet exist.
+
+In addition to the possible errors, cyclic imports indicate that two modules are
+circularly dependent. This means that the modules cannot be tested 
+independently, and it makes it harder to understand the architecture of the 
+system.
+
+Recommendation
+
+The cycle may be broken by removing any one import. If only one function or 
+method requires the import, then consider moving that to the other module and 
+deleting the import. If the two modules are more intimately connected, then 
+move the inter-dependent parts into a third module and have both the original 
+modules import that. 
+
+0) Explanation
+Why?
+
+So, when we called just the import test1, it was working fine but when we tried 
+importing a particular function then it threw that error.
+
+That is because, when we write an import statement, the whole file is not 
+executed unlike when we write an from test import something which actually needs
+to make sure the file is executed so that the name we are importing exists.
+
+1) Explanation
+
+If you do import foo inside bar and import bar inside foo, it will work fine. 
+By the time anything actually runs, both modules will be fully loaded and will 
+have references to each other.
+
+The problem is when instead you do from foo import abc and from bar import xyz. 
+Because now each module requires the other module to already be imported (so 
+that the name we are importing exists) before it can be imported.
+

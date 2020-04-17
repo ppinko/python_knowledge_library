@@ -1,0 +1,141 @@
+The Global Interpreter Lock (GIL)
+
+The GIL is a solution to the common problem of dealing with shared resources,
+like memory in a computer. When two threads try to modify the same resource at
+the same time, they can step on each other’s toes.
+
+One solution to this problem is a single, global lock on the interpreter when 
+a thread is interacting with the shared resource.
+
+Python’s GIL accomplishes this by locking the entire interpreter, meaning that
+it’s not possible for another thread to step on the current one. When CPython
+handles memory, it uses the GIL to ensure that it does so safely.
+
+SECOND ARTICLE
+The Python Global Interpreter Lock or GIL, in simple words, is a mutex 
+(or a lock) that allows only one thread to hold the control of the Python 
+interpreter.
+
+This means that only one thread can be in a state of execution at any point 
+in time. The impact of the GIL isn’t visible to developers who execute 
+single-threaded programs, but it can be a performance bottleneck in CPU-bound 
+and multi-threaded code.
+
+Since the GIL allows only one thread to execute at a time even in 
+a multi-threaded architecture with more than one CPU core, the GIL has gained 
+a reputation as an “infamous” feature of Python.
+
+Reference count problem:
+The problem was that this reference count variable needed protection from 
+race conditions where two threads increase or decrease its value simultaneously.
+If this happens, it can cause either leaked memory that is never released or, 
+even worse, incorrectly release the memory while a reference to that object
+still exists. This can can cause crashes or other “weird” bugs in your Python
+programs.
+
+This reference count variable can be kept safe by adding locks to all data 
+structures that are shared across threads so that they are not modified
+inconsistently. 
+
+But adding a lock to each object or groups of objects means multiple locks will
+exist which can cause another problem—Deadlocks (deadlocks can only happen if
+there is more than one lock). Another side effect would be decreased performance
+caused by the repeated acquisition and release of locks.
+
+The GIL is a single lock on the interpreter itself which adds a rule that 
+execution of any Python bytecode requires acquiring the interpreter lock. 
+This prevents deadlocks (as there is only one lock) and doesn’t introduce much 
+performance overhead. But it effectively makes any CPU-bound Python program 
+single-threaded.
+
+The GIL, although used by interpreters for other languages like Ruby, is not 
+the only solution to this problem. Some languages avoid the requirement of a 
+GIL for thread-safe memory management by using approaches other than reference
+counting, such as garbage collection.
+
+On the other hand, this means that those languages often have to compensate 
+for the loss of single threaded performance benefits of a GIL by adding other 
+performance boosting features like JIT compilers.
+
+
+Why was the GIL chosen as the solution?
+
+
+Well, in the words of Larry Hastings, the design decision of the GIL is one of 
+the things that made Python as popular as it is today.
+
+Python has been around since the days when operating systems did not have a 
+concept of threads. Python was designed to be easy-to-use in order to make 
+development quicker and more and more developers started using it.
+
+A lot of extensions were being written for the existing C libraries whose 
+features were needed in Python. To prevent inconsistent changes, these C 
+extensions required a thread-safe memory management which the GIL provided.
+
+The GIL is simple to implement and was easily added to Python. It provides 
+a performance increase to single-threaded programs as only one lock needs to be 
+managed.
+
+C libraries that were not thread-safe became easier to integrate. And these 
+C extensions became one of the reasons why Python was readily adopted by 
+different communities.
+
+As you can see, the GIL was a pragmatic solution to a difficult problem that 
+the CPython developers faced early on in Python’s life.
+
+How to deal with Python’s GIL
+
+If the GIL is causing you problems, here a few approaches you can try:
+
+Multi-processing vs multi-threading: The most popular way is to use 
+a multi-processing approach where you use multiple processes instead of threads.
+Each Python process gets its own Python interpreter and memory space so the GIL
+won’t be a problem. Python has a multiprocessing module which lets us create
+processes easily like this:
+
+from multiprocessing import Pool
+import time
+
+COUNT = 50000000
+def countdown(n):
+    while n>0:
+        n -= 1
+
+if __name__ == '__main__':
+    pool = Pool(processes=2)
+    start = time.time()
+    r1 = pool.apply_async(countdown, [COUNT//2])
+    r2 = pool.apply_async(countdown, [COUNT//2])
+    pool.close()
+    pool.join()
+    end = time.time()
+    print('Time taken in seconds -', end - start)
+
+
+Alternative Python interpreters: Python has multiple interpreter 
+implementations. CPython, Jython, IronPython and PyPy, written in C, Java, C# 
+and Python respectively, are the most popular ones. GIL exists only in the 
+original Python implementation that is CPython. If your program, with its 
+libraries, is available for one of the other implementations then you can try 
+them out as well.
+
+
+The presence of a global lock doesn't mean we can't use parallelism, but it 
+does mean that we have to use multiple processes instead of multiple threads. 
+There are a few disadvantages of having to do this because threads share the 
+same memory while processes do not. So processes have to use some external 
+message passing mechanism to communicate with each other. Also there is a 
+greater overhead involved in spawning new processes, compared to forking new 
+threads. Nevertheless, in practice these issues often don't amount to much and 
+multiprocessing does have some definite benefits:
+
+-    The code is easier to write because it does not need to protect shared 
+memory with mutex's.
+-    Since multi-threading is difficult to test, writing single threaded code 
+which runs in multiple processes often results in  code that is easily testable 
+and has fewer (thread related) bugs.
+-    Multiple processes can take advantage of a distributed architecture by 
+executing processes on multiple machines, which can providing extremely 
+high scalability.
+-    Multiple processes can be started and stopped from outside the program, 
+giving us more control of how much parallelism we want to achieve.

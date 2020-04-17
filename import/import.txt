@@ -1,0 +1,39 @@
+import statement - a statement which makes the objects contained in a module 
+available for use within another module. There are two forms for the import 
+statement. 
+
+import mymod1 (as example)
+from mymod2 import f1, f2, v1, v2
+
+The second form brings the imported objects into the namespace of the importing 
+module, while the first form preserves a separate namespace for the imported 
+module, requiring mymod1.v1 to access the v1 variable from that module.
+
+There are two reasons in favor of using import module rather than from module 
+import function.
+
+First is the namespace. Importing a function into the global namespace risks 
+name collisions.
+
+Second isn't that relevant to standard modules, but significant for you own 
+modules, especially during development. It's the option to reload() a module. 
+Consider this:
+
+from module import func
+...
+reload(module)
+# func still points to the old code
+
+On the other hand
+
+import module
+...
+reload(module)
+# module.func points to the new code
+
+As for speed...
+
+Whether you import a module or import a function from a module, Python will 
+parse the whole module. Either way the module is imported. "Importing a 
+function" is nothing more than binding the function to a name. In fact import 
+module is less work for interpreter than from module import func.
