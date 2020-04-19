@@ -14,6 +14,8 @@ pip3 help
 pip3 install requests
 pip show requests
 python -m pip install --upgrade pip
+pip3 list --outdated
+pip install [package_name] --upgrade
 
 Using Requirement Files
 
