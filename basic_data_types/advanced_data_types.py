@@ -9,6 +9,7 @@ a = array('u', ['a', 'F', 'd' ,'q'])
 print(a, type(a))
 print(a.index('a'))
 
+
 from collections import deque
 
 d = deque('ghi')                 # make a new deque with three items
