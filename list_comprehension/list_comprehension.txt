@@ -71,3 +71,16 @@ SyntaxError: invalid syntax
 
 >>> list(zip(*matrix))
 [(1, 5, 9), (2, 6, 10), (3, 7, 11), (4, 8, 12)]
+
+
+MORE ADVANCED 
+
+One can combine ternary expressions and if conditions. The ternary operator
+works on the filtered result:
+
+[x if x > 2 else '*' for x in range(10) if x % 2 == 0]
+# Out: ['*', '*', 4, 6, 8]
+
+The same couldn't have been achieved just by ternary operator only:
+[x if (x > 2 and x % 2 == 0) else '*' for x in range(10)]
+# Out:['*', '*', '*', '*', 4, '*', 6, '*', 8, '*']
