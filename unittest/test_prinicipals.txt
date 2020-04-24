@@ -1,0 +1,98 @@
+RUNNING TEST USING UNITTEST
+
+https://www.internalpointers.com/post/run-painless-test-suites-python-unittest
+
+1. Cases, suites, runners, fixtures:
+
+a) text fixture - is a function that contains the preparation of your test
+environment. Here you usually initialize databases, create files, prepare stuff
+so that your tests can work properly. Fixtures are also used to clean up the
+scene once finished.
+
+b) test case - is a class that represents an individual unit of testing. That's
+the place where you make sure your code works correctly. It contains fixtures
+and calls to assert methods to check for and report failures.
+
+c) test suite - is just a bunch of test cases together.
+
+d) test runner - is a script that takes care of running the test suite.
+
+2. A barebone unit test (test case)
+
+import unittest
+
+class TestPlayer(unittest.TestCase):
+
+    def setUp(self):
+        ...
+
+    def test_run(self):
+        ...
+
+    def test_attack(self):
+        ...
+
+    def tearDown(self):
+        ...
+
+Explanation:
+
+a) First of all import the unittest module.
+
+b) The class TestPlayer is the actual test case and follows a naming convention:
+Test[whatYouWantToTest]. It also extends the unittest.TestCase base object to
+work: a test case is always created by subclassing the parent class.
+
+c) Each test case begins and ends with setUp() and tearDown(): those are
+fixtures. There you put the code that will be executed before and after each
+test method. They are not mandatory: you can just omit them if you don't need
+specific initializations or cleanups.
+
+d) The "body" of the test case is composed of test methods: test_run and
+test_attack in the example above. It's the place where you check that your code
+is running properly, with the aid of the assert methods.
+
+e) Individual test methods' name must start with the letters test_. That's
+another naming convention required by the test runner to know which methods are
+the actual tests.
+
+3. Organize tests in a test suite
+
+# tests/runner.py
+import unittest
+
+# import your test modules
+import player
+import scenario
+import thing
+
+# initialize the test suite
+loader = unittest.TestLoader()
+suite  = unittest.TestSuite()
+
+# add tests to the test suite
+suite.addTests(loader.loadTestsFromModule(player))
+suite.addTests(loader.loadTestsFromModule(scenario))
+suite.addTests(loader.loadTestsFromModule(thing))
+
+# initialize a runner, pass it your suite and run it
+runner = unittest.TextTestRunner(verbosity=3)
+result = runner.run(suite)
+
+Explanation:
+
+a) The basic idea here is to have a new Python file runner.py alongside your
+tests that contains our runner.
+
+b) First of all import your modules containing your tests.
+
+c) Initialize the suite and the loader by calling unittest.TestLoader() and
+unittest.TestSuite().
+
+d) Add your tests to the test suite with 
+suite.addTests(loader.loadTestsFromModule([your-module-here]))
+
+e) Initialize the test runner and fire it with runner.run(suite)
+
+f) set the verbosity level of the test runner. That's how much information
+you'll see in the console output.
