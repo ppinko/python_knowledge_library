@@ -137,3 +137,95 @@ items = ["zero", "one", "two"]
 print(re.sub(r"a\[([0-3])\]", lambda match: items[int(match.group(1))],
              "Items: a[0], a[1], something, a[2]"))
 # Out: 'Items: zero, one, something, two'
+
+print('-----------------------------------')
+
+"""
+SPLITTING A STRING
+
+re.split(pattern, string, maxsplit=0, flags=0) - Split the source string by
+the occurrences of the pattern, returning a list containing the resulting
+substrings.
+"""
+
+data = re.split(r'\s+', 'James 94 Samantha 417 Scarlett 74')
+print( data )
+# Output: ['James', '94', 'Samantha', '417', 'Scarlett', '74']
+
+print('-----------------------------------')
+
+"""
+GROUPING
+
+Grouping is done with parentheses. Calling group() returns a string formed
+of the matching parenthesized subgroups.
+"""
+
+match = re.search(r"^123", "123zzb")
+print(match.group())    # Group without argument returns the entire match found
+# '123'
+
+print(match.group(0))   # Specifying 0 gives the same result as specifying no argument
+# Out: '123'
+
+""" Calling groups() returns a list of tuples containing the subgroups. """
+
+sentence = "This is a phone number 672-123-456-9910"
+pattern = r".*(phone).*?([\d-]+)"
+
+match = re.match(pattern, sentence)
+
+print(match.groups())  # The entire match as a list of tuples of the paranthesized subgroups
+# Out: ('phone', '672-123-456-9910')
+
+print(match.group())       # The entire match as a string
+# Out: 'This is a phone number 672-123-456-9910'
+
+print(match.group(0))      # The entire match as a string
+# Out: 'This is a phone number 672-123-456-9910'
+
+print(match.group(1))      # The first parenthesized subgroup.
+# Out: 'phone'
+
+print(match.group(2))      # The second parenthesized subgroup.
+# Out: '672-123-456-9910'
+
+print(match.group(1, 2))   # Multiple arguments give us a tuple.
+# Out: ('phone', '672-123-456-9910')
+
+print('-----------------------------------')
+
+"""
+ESCAPING SPECIAL CHARACTERS
+
+Special characters (like the character class brackets [ and ] below) are
+not matched literally.
+"""
+
+match = re.search(r'[b]', 'a[b]c')
+print(match.group())
+# Out: 'b'
+
+""" By escaping the special characters, they can be matched literally """
+match = re.search(r'\[b\]', 'a[b]c')
+print(match.group())
+# Out: '[b]'
+
+""" The re.escape() function can be used to do this for you """
+
+print(re.escape('a[b]c'))
+# Out: 'a\\[b\\]c'
+
+match = re.search(re.escape('a[b]c'), 'a[b]c')
+print(match.group())
+# Out: 'a[b]c'
+
+""" The re.escape() function escapes all special characters, so it is useful
+if you are composing a regular expression based on user input 
+"""
+username = 'A.C.' # suppose this came from the user
+print(re.findall(r'Hi {}!'.format(username), 'Hi A.C.! Hi ABCD!'))
+# Out: ['Hi A.C.!', 'Hi ABCD!']
+
+print(re.findall(r'Hi {}!'.format(re.escape(username)), 'Hi A.C.! Hi ABCD!'))
+# Out: ['Hi A.C.!']
