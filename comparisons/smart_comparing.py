@@ -1,4 +1,6 @@
 """
+SMART COMPARING
+
 a > exp > b
 
 As soon as one comparison returns False , the expression evaluates immediately
