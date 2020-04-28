@@ -47,7 +47,7 @@ NBA.profession = "lazy boy" # possible to directly change class attribute
 print("------------")
 print("Lebron James is also a {}".format(leBron.profession))
 print("Kevin Garnett is also a {}".format(garnett.profession))
-print("Class attribute didn't change = {0}".format(NBA.profession))
+print("Class attribute changed = {0}".format(NBA.profession))
 
 ###############################################################################
 
@@ -60,7 +60,7 @@ class Raptors(NBA): # child class
         self.number = number
 
     def get_number(self):
-        print("Player number is {}\n".format(self.number))
+        print("{} number is {}\n".format(self.name, self.number))
 
 lowry = Raptors("Lowry", 29, 0)
 lowry.change_age(18)
@@ -94,6 +94,7 @@ class Computer:
 
     def setMinPrice(self, price):
         self._minprice = price
+
 
 print("\nInitial settings")
 c = Computer()
