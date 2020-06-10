@@ -19,10 +19,12 @@ string = "123zzb"
 
 match = re.match(pattern, string)
 print(match, match.group())
+# out: <re.Match object; span=(0, 3), match='123'> 123
 
 match2 = re.match(pattern2, string)
 if match2 is None:
     print('There is no {0} at the beginning of the string'.format(pattern2))
+# out: There is no 125 at the beginning of the string
 
 print('-----------------------------------')
 """
@@ -38,7 +40,9 @@ word = 'developer'
 match = re.search(pattern, word)
 if match:
     print('"{0}" found at the index {1}'.format(pattern, word.index(pattern)))
+    # out: "vel" found at the index 2
     print(match.group())
+    # out: vel
 
 print("+++++++++++++++++++++++++++++++++++")
 
@@ -61,7 +65,7 @@ print(match.group(0))   # '123'
 match = re.search(r"777$", "zzb777")
 print(match.group(0))   # '777'
 
-match = re.search(r"^123$", "123")
+match = re.search(r"^123$", "123") # '123'
 print(match.group(0))
 
 print('-----------------------------------')
